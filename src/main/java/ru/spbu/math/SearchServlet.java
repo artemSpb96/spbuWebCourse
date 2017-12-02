@@ -1,4 +1,4 @@
-package webapp;
+package ru.spbu.math;
 
 import java.io.IOException;
 import javax.servlet.ServletException;
@@ -7,13 +7,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.http.HttpStatus;
 
-public class ExampleServlet extends HttpServlet {
+public class SearchServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
-        throws ServletException, IOException {
+        throws IOException, ServletException {
 
-        resp.setStatus(HttpStatus.OK_200);
-        resp.getWriter().println("EmbeddedJetty");
+        resp.sendRedirect("index.html");
     }
 }
