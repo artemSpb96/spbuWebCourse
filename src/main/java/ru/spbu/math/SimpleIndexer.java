@@ -41,21 +41,24 @@ public enum SimpleIndexer {
     }
 
     public List<TestDocument> search(final String input) {
+        return search(testDocuments, input);
+    }
 
+    public List<TestDocument> search(List<TestDocument> documents, final String input) {
         HashSet<Integer> ids = index.get(input);
 
         if (ids == null || ids.isEmpty()) {
             return new ArrayList<>();
         }
 
-        return testDocuments.stream()
-            .filter(document -> index.get(input).contains(document.getId()))
+        return documents.stream()
+            .filter(document -> ids.contains(document.getId()))
             .collect(Collectors.toList());
     }
 
     private void initIndex(List<TestDocument> testDocuments) {
         for (TestDocument testDocument : testDocuments) {
-            String[] words = testDocument.getText().split("\\W+");
+            String[] words = testDocument.getText().split("\\s+");
             for (String word : words) {
                 if (index.containsKey(word)) {
                     index.get(word).add(testDocument.getId());

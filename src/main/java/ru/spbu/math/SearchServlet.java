@@ -18,12 +18,26 @@ public class SearchServlet extends HttpServlet {
         PrintWriter out = resp.getWriter();
 
         String searchbox = req.getParameter("searchbox");
-        if (searchbox == null || searchbox.isEmpty()) {
-            out.println("No search parametr");
+        if (searchbox == null) {
+            out.println("No search parameter");
             return;
         }
 
-        List<TestDocument> resultDocuments = SimpleIndexer.getInstance().search(searchbox);
+        String[] searchWords = searchbox.split("\\s+");
+
+        if (searchWords.length == 0) {
+            out.println("Empty search parameter");
+            return;
+        }
+
+        List<TestDocument> resultDocuments = SimpleIndexer.getInstance().search(searchWords[0]);
+
+        for (int i = 1; i < searchWords.length; ++i) {
+            if (resultDocuments.isEmpty()) break;
+
+            resultDocuments = SimpleIndexer.getInstance().search(resultDocuments, searchWords[i]);
+        }
+
 
         if (resultDocuments.isEmpty()) {
             out.println("No documents were found with " + searchbox + " parametr");
