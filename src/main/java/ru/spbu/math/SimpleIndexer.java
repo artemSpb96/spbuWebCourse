@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -19,36 +20,59 @@ import org.xml.sax.SAXException;
 public enum SimpleIndexer {
     INSTANCE;
 
-    private HashMap<String, HashSet<Integer>> index;
-    private List<TestDocument> testDocuments;
+    private final HashMap<String, HashSet<Integer>> index;
+    private final List<TestDocument> testDocuments;
 
     SimpleIndexer() {
-        index = new HashMap<String, HashSet<Integer>>();
+        index = new HashMap<>();
+        testDocuments = new ArrayList<>();
 
         try {
-            testDocuments = parseDocument(new File("testDocument.sgm"));
+            initTestDocuments(new File("testDocument.sgm"));
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        for (TestDocument testDocument : testDocuments) {
-
-        }
-
+        initIndex(testDocuments);
     }
 
     public static SimpleIndexer getInstance() {
         return INSTANCE;
     }
 
-    private List<TestDocument> parseDocument(File file)
+    public List<TestDocument> search(final String input) {
+
+        HashSet<Integer> ids = index.get(input);
+
+        if (ids == null || ids.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        return testDocuments.stream()
+            .filter(document -> index.get(input).contains(document.getId()))
+            .collect(Collectors.toList());
+    }
+
+    private void initIndex(List<TestDocument> testDocuments) {
+        for (TestDocument testDocument : testDocuments) {
+            String[] words = testDocument.getText().split("\\W+");
+            for (String word : words) {
+                if (index.containsKey(word)) {
+                    index.get(word).add(testDocument.getId());
+                } else {
+                    index.put(word, new HashSet<Integer>());
+                }
+            }
+        }
+    }
+
+    private void initTestDocuments(File file)
         throws ParserConfigurationException, IOException, SAXException {
         DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
         Document document = documentBuilder.parse(file);
 
         NodeList reuters = document.getElementsByTagName("REUTERS");
 
-        List<TestDocument> testDocuments = new ArrayList<TestDocument>();
         for (int i = 0; i < reuters.getLength(); ++i) {
             Node currentNode = reuters.item(i);
             if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
@@ -78,7 +102,5 @@ public enum SimpleIndexer {
 
             }
         }
-
-        return testDocuments;
     }
 }
