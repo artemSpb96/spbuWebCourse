@@ -30,6 +30,18 @@ public class SearchServlet extends HttpServlet {
             return;
         }
 
+        List<TestDocument> resultDocuments = getDocumentsBySearchWords(searchWords);
+
+
+        if (resultDocuments.isEmpty()) {
+            printNoFoundDocumentsMessage(out, searchbox);
+        } else {
+            printFoundDocuments(out, resultDocuments);
+        }
+
+    }
+
+    private List<TestDocument> getDocumentsBySearchWords(String[] searchWords) {
         List<TestDocument> resultDocuments = SimpleIndexer.getInstance().search(searchWords[0]);
 
         for (int i = 1; i < searchWords.length; ++i) {
@@ -38,12 +50,14 @@ public class SearchServlet extends HttpServlet {
             resultDocuments = SimpleIndexer.getInstance().search(resultDocuments, searchWords[i]);
         }
 
+        return resultDocuments;
+    }
 
-        if (resultDocuments.isEmpty()) {
-            out.println("No documents were found with " + searchbox + " parametr");
-            return;
-        }
+    private void printNoFoundDocumentsMessage(PrintWriter out, String searchbox) {
+        out.println("No documents were found with " + searchbox + " parametr");
+    }
 
+    private void printFoundDocuments(PrintWriter out, List<TestDocument> resultDocuments) {
         out.println("<html>");
         out.println("<head>");
         out.println("<title>Search result</title>");
@@ -60,7 +74,5 @@ public class SearchServlet extends HttpServlet {
 
         out.println("</body>");
         out.println("</html>");
-
-
     }
 }

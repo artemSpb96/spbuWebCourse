@@ -63,7 +63,7 @@ public enum SimpleIndexer {
                 if (index.containsKey(word)) {
                     index.get(word).add(testDocument.getId());
                 } else {
-                    index.put(word, new HashSet<Integer>());
+                    index.put(word, new HashSet<>());
                 }
             }
         }
