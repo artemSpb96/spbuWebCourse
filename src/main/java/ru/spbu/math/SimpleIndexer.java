@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -27,13 +28,16 @@ public enum SimpleIndexer {
         index = new HashMap<>();
         testDocuments = new ArrayList<>();
 
+        Logger logger = Logger.getLogger(SimpleIndexer.class);
         try {
             initTestDocuments(new File("testDocument.sgm"));
+            logger.info("Parsing documents");
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Can not parse documents:" + e.getMessage());
         }
 
         initIndex(testDocuments);
+        logger.info("Init index");
     }
 
     public static SimpleIndexer getInstance() {

@@ -7,9 +7,12 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.apache.log4j.Logger;
 import org.eclipse.jetty.http.HttpStatus;
 
 public class SearchServlet extends HttpServlet {
+
+    private static final Logger logger = Logger.getLogger(SearchServlet.class);
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -20,13 +23,16 @@ public class SearchServlet extends HttpServlet {
         String searchbox = req.getParameter("searchbox");
         if (searchbox == null) {
             out.println("No search parameter");
+            logger.error("No search parameter");
             return;
         }
 
         String[] searchWords = searchbox.split("\\s+");
 
+        logger.info("Start searching " + searchbox);
         if (searchWords.length == 0) {
             out.println("Empty search parameter");
+            logger.debug("Empty search parameter");
             return;
         }
 
@@ -35,8 +41,10 @@ public class SearchServlet extends HttpServlet {
 
         if (resultDocuments.isEmpty()) {
             printNoFoundDocumentsMessage(out, searchbox);
+            logger.debug("Found 0 documents");
         } else {
             printFoundDocuments(out, resultDocuments);
+            logger.debug("Found " + resultDocuments.size() + " documents");
         }
 
     }

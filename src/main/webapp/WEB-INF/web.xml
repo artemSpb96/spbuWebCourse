@@ -5,7 +5,16 @@
     version="3.0">
 
     <display-name>Webapp</display-name>
-    
+
+    <context-param>
+        <param-name>log4j-config-location</param-name>
+        <param-value>WEB-INF/log4j.properties</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>ru.spbu.math.ContextListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>SearchServlet</servlet-name>
         <servlet-class>ru.spbu.math.SearchServlet</servlet-class>
