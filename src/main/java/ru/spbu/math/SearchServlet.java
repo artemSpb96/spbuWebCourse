@@ -66,11 +66,11 @@ public class SearchServlet extends HttpServlet {
     }
 
     private void printFoundDocuments(PrintWriter out, List<TestDocument> resultDocuments) {
-        out.println("<html>");
-        out.println("<head>");
-        out.println("<title>Search result</title>");
-        out.println("</head>");
-        out.println("<body bgcolor=\"white\">");
+//        out.println("<html>");
+//        out.println("<head>");
+//        out.println("<title>Search result</title>");
+//        out.println("</head>");
+//        out.println("<body bgcolor=\"white\">");
 
         for (TestDocument document : resultDocuments) {
             out.println("<span>");
@@ -80,7 +80,7 @@ public class SearchServlet extends HttpServlet {
 
         }
 
-        out.println("</body>");
-        out.println("</html>");
+//        out.println("</body>");
+//        out.println("</html>");
     }
 }
