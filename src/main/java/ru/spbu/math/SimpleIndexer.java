@@ -30,7 +30,8 @@ public enum SimpleIndexer {
 
         Logger logger = Logger.getLogger(SimpleIndexer.class);
         try {
-            initTestDocuments(new File("testDocument.sgm"));
+            initTestDocuments(new File(
+                getClass().getClassLoader().getResource("testDocument.sgm").getFile()));
             logger.info("Parsing documents");
         } catch (Exception e) {
             logger.error("Can not parse documents:" + e.getMessage());
